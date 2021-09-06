@@ -41,9 +41,9 @@ current_colorscheme=$(awk -F'*' '/^colors:/{print $2}' $alacritty_conf)
 current_opacity=$(awk '/^background_opacity/{print $NF}' $alacritty_conf)
 current_font_size=$(awk '/^  size:/{print $NF}' $alacritty_conf)
 
-current_offset_x=$(sed -n  '/^  offset:$/{N;N;p}' $alacritty_conf |
+current_offset_x=$(gsed -n  '/^  offset:$/{N;N;p}' $alacritty_conf |
     awk '/x:/{print $NF}')
-current_offset_y=$(sed -n  '/^  offset:$/{N;N;p}' $alacritty_conf |
+current_offset_y=$(gsed -n  '/^  offset:$/{N;N;p}' $alacritty_conf |
     awk '/y:/{print $NF}')
 
 current_font_family=$(awk '/^    family:/{print $(NF-2)}' $alacritty_conf |
@@ -85,7 +85,7 @@ trim_opacity_suffix() {
     fi
 
     if echo $to_opacity | grep -qE '^(0\.|\.)[0-9]+$'; then
-        to_opacity=$(echo -n ${to_opacity} | sed -r 's/[0]+$//')
+        to_opacity=$(echo -n ${to_opacity} | gsed -r 's/[0]+$//')
     fi
 
     if echo $to_opacity | grep -qE '^\.'; then
@@ -110,7 +110,7 @@ update_config_for_alacritty() {
     read -r regular_style_ln bold_style_ln italic_style_ln bold_italic_style_ln \
         <<<$current_font_styles_linenr
 
-    sed -i "/^colors/s/^.*$/colors: *$current_colorscheme/;
+    gsed -i "/^colors/s/^.*$/colors: *$current_colorscheme/;
         /^  size:/s/^.*$/  size: $current_font_size/;
         /^background_opacity/s/^.*$/background_opacity: $current_opacity/;
         / family:/s/^.*$/    family: $current_font_family Nerd Font/;
@@ -140,7 +140,7 @@ change_font_for_alacritty() {
     read -r regular_style_ln bold_style_ln italic_style_ln bold_italic_style_ln \
         <<<$current_font_styles_linenr
 
-    sed -i "/ family:/s/^.*$/    family: $to_font_family Nerd Font/;
+    gsed -i "/ family:/s/^.*$/    family: $to_font_family Nerd Font/;
         ${regular_style_ln}s/^.*$/    style: $regular_style/;
         ${bold_style_ln}s/^.*$/    style: $bold_style/;
         ${italic_style_ln}s/^.*$/    style: $italic_style/;
@@ -151,13 +151,13 @@ change_font_for_alacritty() {
 
 change_font_size_for_alacritty() {
     local to_font_size=$1
-    sed -i "/^  size:/s/^.*$/  size: $to_font_size/" $alacritty_conf
+    gsed -i "/^  size:/s/^.*$/  size: $to_font_size/" $alacritty_conf
 }
 
 change_colorscheme_for_alacritty_vim() {
     local to_colorscheme=$1
 
-    sed -i "/^colors/s/^.*$/colors: *$to_colorscheme/" $alacritty_conf
+    gsed -i "/^colors/s/^.*$/colors: *$to_colorscheme/" $alacritty_conf
 
     [[ "$to_colorscheme" = "base16" ]] && to_colorscheme="base16-default-dark"
     [[ "$to_colorscheme" = "onehalf" ]] && to_colorscheme="onehalfdark"
@@ -202,16 +202,16 @@ colorscheme ${to_colorscheme}" >$vim_colorscheme_file
 
 change_opacity_for_alacritty() {
     local to_opacity=$1
-    sed -i "/^background_opacity/s/^.*$/background_opacity: $to_opacity/" \
+    gsed -i "/^background_opacity/s/^.*$/background_opacity: $to_opacity/" \
         $alacritty_conf
 }
 
 toggle_transparancy_for_alacritty() {
     if [[ $current_opacity = "1.0" ]] || [[ $current_opacity = "1" ]]; then
-        sed -i "/^background_opacity/s/^.*$/background_opacity: $last_opacity/" \
+        gsed -i "/^background_opacity/s/^.*$/background_opacity: $last_opacity/" \
             $alacritty_conf
     else
-        sed -i "/^background_opacity/s/^.*$/background_opacity: 1/" \
+        gsed -i "/^background_opacity/s/^.*$/background_opacity: 1/" \
             $alacritty_conf
         echo "$current_opacity" >$last_opacity_file
     fi

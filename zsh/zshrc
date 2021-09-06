@@ -189,6 +189,7 @@ export CPPFLAGS="-I/usr/local/opt/openjdk/include"
 
 
 # --- Vim/Neovim & Alacritty 主题相关命令配置 {{
+alias gsed="sed"
 
 alias colorscheme="~/.dotfiles/scripts/colorscheme.zsh"
 alias font="~/.dotfiles/scripts/font.zsh"

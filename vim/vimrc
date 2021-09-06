@@ -420,7 +420,7 @@ Plug 'rhysd/git-messenger.vim'
 
 " 在文件内直接显示颜色代码所表示的颜色.
 " NOTE: 该插件需要操作系统有 Go 环境.
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+# Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 
 " 自己对配色方案进行调整时, 可使用此工具获取光标下当前配色方案的详细信息.
 Plug 'vim-scripts/SyntaxAttr.vim'

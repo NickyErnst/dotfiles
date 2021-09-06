@@ -1140,7 +1140,7 @@ window:
   #     - buttonless: Title bar, transparent background and no title bar buttons
   #
   # Default: full
-  decorations: buttonless
+  decorations: full
 
   # Startup Mode (changes require restart)
   #

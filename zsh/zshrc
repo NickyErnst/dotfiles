@@ -98,9 +98,9 @@ source $HOME/.zshrc.private
 #   3. 关闭当前标签页的代理, 使用 unproxy 命令.
 #   4. 经过实测, 无法正常使用 socks5 代理, 比如: export ALL_PROXY=socks5://127.0.0.1:10808
 alias proxy="export ALL_PROXY=http://127.0.0.1:10818;
-gsed -i '/^Host github.com/{s/^/#/;n;s/^/#/}' ~/.ssh/config"
+sed -i '/^Host github.com/{s/^/#/;n;s/^/#/}' ~/.ssh/config"
 alias unproxy="unset ALL_PROXY;
-gsed -i '/^#Host github.com/{s/^#//;n;s/^#//}' ~/.ssh/config"
+sed -i '/^#Host github.com/{s/^#//;n;s/^#//}' ~/.ssh/config"
 
 # brew 资源镜像配置, 使用代理的时候不使用此资源镜像.
 [[ -z "$ALL_PROXY" ]] &&

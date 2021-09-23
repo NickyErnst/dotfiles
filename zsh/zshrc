@@ -1,5 +1,5 @@
 # zshrc by @windvalley
-# https://raw.githubusercontent.com/windvalley/dotfiles/master/zsh/zshrc
+# https://raw.githubusercontent.com/vimhack/dotfiles/master/zsh/zshrc
 
 
 # vim: set foldmarker={{,}} foldlevel=0 foldmethod=marker:
@@ -29,7 +29,7 @@
 #         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 #
 #   3. 使用本 zshrc 文件
-#      wget -O ~/.zshrc https://raw.githubusercontent.com/windvalley/dotfiles/master/zsh/zshrc
+#      curl -sfLo ~/.zshrc https://raw.githubusercontent.com/vimhack/dotfiles/master/zsh/zshrc
 
 # }}
 
@@ -150,13 +150,23 @@ PATH="$GOBIN:$PATH"
 export GOPATH GOBIN GOPROXY GOPRIVATE GOSUMDB PATH
 
 # ****** Python3 ******
-# brew install python3
-# brew install poetry
 
-# python
+# python3
+# brew install python3
 export PATH="/usr/local/opt/python3/bin:$PATH"
+
 # poetry
-export PATH="$HOME/.poetry/bin:$PATH"
+# 1) Install:
+#    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 -
+# 2) Uninstall:
+#    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 - --uninstall
+# 3) Update:
+#    poetry self update
+# 4) Enable tab completion:
+#    poetry completions zsh > $(brew --prefix)/share/zsh/site-functions/_poetry
+#    poetry help completions
+#    exec zsh
+export PATH="/Users/xg/Library/Python/3.9/bin:$PATH"
 
 # ****** Lua ******
 # brew install lua@5.3
@@ -185,11 +195,17 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 export PATH="/usr/local/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/openjdk/include"
 
+# ****** bash ******
+# brew install bash
+
+export PATH="/usr/local/opt/bash/bin:$PATH"
+
 # }}
 
 
-# --- Vim/Neovim & Alacritty 主题相关命令配置 {{
+# --- 自定义命令配置 {{
 
+# *** Vim/Neovim & Alacritty 主题相关命令配置
 alias colorscheme="~/.dotfiles/scripts/colorscheme.zsh"
 alias font="~/.dotfiles/scripts/font.zsh"
 alias opacity="~/.dotfiles/scripts/opacity.zsh"
@@ -197,7 +213,6 @@ alias font-size="~/.dotfiles/scripts/font_size.zsh"
 alias vim-bgtransparency="~/.dotfiles/scripts/vim_bgtransparency.zsh"
 alias colors-print="~/.dotfiles/scripts/colors_print.sh"
 alias hexcolors-print="~/.dotfiles/scripts/print_256_hex_colors.py"
-alias volume="~/.dotfiles/scripts/audio_volume.zsh"
 
 alias cs=colorscheme
 alias f=font
@@ -206,7 +221,14 @@ alias fs=font-size
 alias v=vim-bgtransparency
 alias c=colors-print
 alias hex=hexcolors-print
+
+# *** 调节系统音量
+alias volume="~/.dotfiles/scripts/audio_volume.zsh"
 alias vol=volume
+
+# *** 便捷批量 ssh 连接或恢复连接远程服务器
+alias ssh-sessions="~/.dotfiles/scripts/ssh_sessions.sh"
+alias s=ssh-sessions
 
 # }}
 
@@ -225,9 +247,13 @@ alias lsof_tcp="lsof -aP -i TCP -s TCP:LISTEN"
 # 用于 git commit 的签名.
 export GPG_TTY=$(tty)
 
-# fzf(https://github.com/junegunn/fzf)
+# *** fzf (https://github.com/junegunn/fzf)
+# brew install fzf
+# $(brew --prefix)/opt/fzf/install
 export FZF_DEFAULT_OPTS='--height 60% --layout=reverse --border'
 alias ff="vim \$(fzf)"
+# Useful key bindings and fuzzy completion.
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # }}
 
@@ -267,15 +293,27 @@ alias ff="vim \$(fzf)"
 #                   glog  git log --oneline --decorate --graph
 #                     gl  git pull
 #
-# *** 自定义命令
-#                  theme  列出 vim 和 alacritty 主题颜色和使用方法.
-#          theme gruvbox  将 vim 和 alacritty 的主题颜色切换为 gruvbox.
-#            opacity 0.8  将 alacritty 终端的背景透明度设置为80%, 数字越小, 透明度越大.
-#          font FiraCode  将 alacritty 终端的字体切换为 FiraCode.
-#           font-size 12  将 alacritty 终端的字体大小设置为 12.
-# vim-bgtransparency 1/0  打开或关闭 Vim 背景透明色.
-#             t/o/f/fs/v  theme, opacity, font, font-size, vim-bgtransparent 的 alias 命令.
+# *** fzf 工具 (https://github.com/junegunn/fzf)
 #                     ff  通过 fzf 搜索文件并用 vim 打开.
+#                 ctrl t  列出当前目录下的所有目录和文件,
+#                         选择目标文件后回车即可将所选粘贴到命令行上.
+#                 meta c  使用 alt/option 键 + c 键, 列出当前目录下的所有子目录,
+#                         选择目标目录后回车即可直接进入到目录中.
+#                 ctrl r  列出历史命令列表, 输入关键字搜索想要执行的历史命令行.
+#               ctrl k/j  从文件列表或命令行列表中上下选择目标.
+#               ctrl p/n  同 ctrl j/k.
+#      ctrl c/ctrl g/esc  退出文件列表或历史命令列表.
+#
+# *** 自定义命令
+#         colorscheme/cs  切换 vim 和 alacritty 的颜色方案.
+#                 font/f  切换 alacritty 终端的字体.
+#              opacity/o  调整 alacritty 终端的透明度.
+#           font-size/fs  设置 alacritty 终端的字体大小.
+#   vim-bgtransparency/v  打开或关闭 Vim 背景透明色.
+#         colors-print/c  打印 256 色的前景色模式和背景色模式.
+#    hexcolors-print/hex  打印 256 色的 16 进制表示方式.
+#             volume/vol  调整系统音量大小.
+#         ssh-sessions/s  便捷的批量 ssh 连接远程服务器.
 #               lsof_tcp  查看当前监听的端口信息.
 
 # }}

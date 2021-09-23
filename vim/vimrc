@@ -1,5 +1,5 @@
 " vimrc by @windvalley
-" https://raw.githubusercontent.com/windvalley/dotfiles/master/vim/vimrc
+" https://raw.githubusercontent.com/vimhack/dotfiles/master/vim/vimrc
 
 
 " vim: set foldmarker={{,}} foldlevel=0 foldmethod=marker:
@@ -83,8 +83,8 @@
 "         mv ~/.vimrc ~/.vimrc.$(date +%F_%T)
 
 "      2) 替换你的当前 ~/.vimrc 文件
-"         curl -sfLo ~/.vimrc https://raw.githubusercontent.com/windvalley/dotfiles/master/vim/vimrc
-"         curl --create-dirs -sfLo ~/.vim/coc-settings.json https://raw.githubusercontent.com/windvalley/dotfiles/master/vim/coc-settings.json
+"         curl -sfLo ~/.vimrc https://raw.githubusercontent.com/vimhack/dotfiles/master/vim/vimrc
+"         curl --create-dirs -sfLo ~/.vim/coc-settings.json https://raw.githubusercontent.com/vimhack/dotfiles/master/vim/coc-settings.json
 
 "    2. Neovim
 "
@@ -92,8 +92,8 @@
 "         mv ~/.config/nvim/init.vim ~/.config/nvim/init.vim.$(date +%F_%T)
 "
 "      2) 替换你的当前 ~/.config/nvim/init.vim 文件
-"         curl --create-dirs -sfLo ~/.config/nvim/init.vim https://raw.githubusercontent.com/windvalley/dotfiles/master/vim/vimrc
-"         curl -sfLo ~/.config/nvim/coc-settings.json https://raw.githubusercontent.com/windvalley/dotfiles/master/vim/coc-settings.json
+"         curl --create-dirs -sfLo ~/.config/nvim/init.vim https://raw.githubusercontent.com/vimhack/dotfiles/master/vim/vimrc
+"         curl -sfLo ~/.config/nvim/coc-settings.json https://raw.githubusercontent.com/vimhack/dotfiles/master/vim/coc-settings.json
 "
 " 三. 注意事项
 "
@@ -220,10 +220,13 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 " molokai
 " 该版本解决了设置透明背景色时, 对于 Vim 部分关键字背景颜色没有变透明的问题,
 " Neovim 不存在此问题.
-Plug 'windvalley/molokai'
+Plug 'vimhack/molokai'
+
+" monokai
+Plug 'sickill/vim-monokai'
 
 " vadelma
-Plug 'windvalley/vadelma'
+Plug 'severij/vadelma'
 
 " pencil
 Plug 'preservim/vim-colors-pencil'
@@ -240,8 +243,8 @@ Plug 'lifepillar/vim-solarized8'
 " spring-night
 Plug 'rhysd/vim-color-spring-night'
 
-" google/primary
-Plug 'windvalley/vim-colorscheme-primary'
+" primary
+Plug 'google/vim-colorscheme-primary'
 
 " }}
 
@@ -270,6 +273,21 @@ Plug 'sheerun/vim-polyglot'
 " 代码静态检查与自动修复插件: ALE(Asynchronous Lint Engine)
 Plug 'dense-analysis/ale'
 
+
+" }}
+
+" 代码调试  Code Debug {{
+
+" 代码 debug 插件
+Plug 'puremourning/vimspector', {'do': './install_gadget.py
+  \ --enable-c
+  \ --force-enable-rust
+  \ --enable-go
+  \ --enable-python
+  \ --enable-lua
+  \ --enable-bash
+  \ '}
+
 " }}
 
 " 目录树等  UI Interface {{
@@ -292,7 +310,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 
 " 美化状态栏插件.
-Plug 'windvalley/lightline.vim'
+Plug 'vimhack/lightline.vim'
 
 " 为 lightline 插件提供显示 ale 检查出来的错误或警告的统计信息;
 " 另外安装此插件可以解决 vim 打开文件同时显示目录树窗口的场景时,
@@ -304,17 +322,11 @@ Plug 'luochen1990/rainbow'
 
 " 快速打开想要的文件, 类似grep搜索文件内容等, 替代ctrlp插件.
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " 集成 ranger 文件管理器.
 Plug 'francoiscabrol/ranger.vim'
-
-" 为目录树或 LeaderF 等插件显示文件类型.
-" NOTE:
-" 1) 需安装 nerd-fonts, 并设置终端模拟器的字体为: Hack Nerd Font 或 Hack Nerd Font Mono;
-"    # doc: https://github.com/ryanoasis/nerd-fonts#font-installation
-"    brew tap homebrew/cask-fonts && brew install font-hack-nerd-font
-" 2) 此插件要安装在目录树、LeaderF 等插件的后面.
-Plug 'ryanoasis/vim-devicons'
 
 " 在上一个插件的基础上, 根据文件类型的不同, 改变图标的颜色.
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -327,6 +339,13 @@ Plug 'Yggdroot/indentLine'
 
 " Vim 屏保 Matrix.
 Plug 'uguu-org/vim-matrix-screensaver'
+
+" 为目录树、LeaderF、ranger 等插件显示文件类型.
+" NOTE:
+" 1) 需安装 nerd-fonts, 并设置终端模拟器的字体为相关字体.
+"    # doc: https://github.com/ryanoasis/nerd-fonts#font-installation
+" 2) 此插件要安装在目录树、LeaderF 等插件的后面.
+Plug 'ryanoasis/vim-devicons'
 
 " }}
 
@@ -897,9 +916,9 @@ map <leader>l <Plug>(easymotion-lineforward)
 " 标记当前行光标左侧的字符.
 map <leader>h <Plug>(easymotion-linebackward)
 
-" 输入1个目标字符即可高亮定位, 支持多窗口同时定位.
+" 输入 1 个目标字符即可高亮定位, 支持多窗口同时定位.
 nmap s <Plug>(easymotion-overwin-f)
-" 需要输入2个目标字符才可高亮定位, 支持多窗口同时定位.
+" 需要输入 2 个目标字符才可高亮定位, 支持多窗口同时定位.
 "nmap s <Plug>(easymotion-overwin-f2)
 
 " 是否启用默认的快捷键映射, 默认值: 1, 表示启用.
@@ -1098,13 +1117,17 @@ nnoremap <leader>a :call SyntaxAttr()<CR>
 """""" matze/vim-move
 " doc: https://github.com/matze/vim-move
 "
-" [n] ctrl k/j/h/l   normal 模式下将光标所在行向上/向下移动 n 行,
+" [n] meta k/j/h/l   normal 模式下将光标所在行向上/向下移动 n 行,
 "                    或将光标所在字符向左/向右移动 n 个字符;
 "                    visual 模式下将选择的内容向上/向下移动 n 行,
 "                    或将选择的内容块向左/向右移动 n 个字符.
 
-" 将默认的 alt 键改为 ctrl 键.
-let g:move_key_modifier = 'C'
+" 默认值为 M, 即 Meta 键, 也就是 macOS 的 Option 键, Windows 的 Alt 键.
+" 可选值:
+"   M: Meta(Alt/Option)
+"   C: Ctrl
+"   S: Shift
+let g:move_key_modifier = 'M'
 
 " }}
 
@@ -1213,6 +1236,7 @@ endfunction
 "   rigel: https://github.com/Rigellute/rigel
 "   gruvbox: https://github.com/morhetz/gruvbox
 "   molokai: https://github.com/tomasr/molokai
+"   monokai: https://github.com/sickill/vim-monokai
 "   one: https://github.com/rakr/vim-one
 "   iceberg: https://github.com/cocopon/iceberg.vim
 "   jellybeans: https://github.com/nanotech/jellybeans.vim
@@ -1221,7 +1245,7 @@ endfunction
 "   papercolor: https://github.com/NLKNguyen/papercolor-theme
 "   ayu: https://github.com/ayu-theme/ayu-vim
 "   onehalf: https://github.com/sonph/onehalf
-"   vadelma: https://github.com/windvalley/vadelma
+"   vadelma: https://github.com/severij/vadelma
 "   pencil: https://github.com/preservim/vim-colors-pencil
 "   github: https://github.com/cormacrelf/vim-colors-github
 "   srcery: https://github.com/srcery-colors/srcery-vim
@@ -1418,7 +1442,8 @@ function! BackgroundTransparency()
   if g:colors_name == 'github' ||
     \ g:colors_name == 'jellybeans' ||
     \ g:colors_name == 'PaperColor' ||
-    \ g:colors_name == 'primary'
+    \ g:colors_name == 'primary' ||
+    \ g:colors_name == 'monokai'
 
     hi! NonText ctermbg=NONE guibg=NONE
   endif
@@ -1480,6 +1505,8 @@ function! ToggleBGTransparent()
       call MolokaiBefore()
       execute 'colorscheme ' . g:colors_name
       call MolokaiAfter()
+    elseif g:colors_name == 'monokai'
+      call MonokaiAfter()
     elseif g:colors_name == 'base16-default-dark'
       call Base16DefaultDarkAfter()
     elseif g:colors_name == 'github'
@@ -1498,12 +1525,12 @@ function! ToggleBGTransparent()
       call Base16CupertinoAfter()
     elseif g:colors_name == 'base16-materia'
       call Base16MateriaAfter()
-    elseif g:colors_name == 'base16-monokai'
-      call Base16MonokaiAfter()
     elseif g:colors_name =~ 'onehalf'
       call OnehalfAfter()
     elseif g:colors_name =~ 'base16-atelier-dune'
       call Base16AtelierDuneAfter()
+    elseif g:colors_name == 'base16-oceanicnext'
+      call Base16OceanicnextAfter()
     endif
   else
     call BackgroundTransparency()
@@ -1523,6 +1550,7 @@ function! ToggleBGColor()
     \ g:colors_name == 'dracula' ||
     \ g:colors_name == 'jellybeans' ||
     \ g:colors_name == 'molokai' ||
+    \ g:colors_name == 'monokai' ||
     \ g:colors_name == 'rigel' ||
     \ g:colors_name == 'tender' ||
     \ g:colors_name == 'nord' ||
@@ -1531,7 +1559,7 @@ function! ToggleBGColor()
     \ g:colors_name == 'spring-night' ||
     \ g:colors_name == 'base16-flat' ||
     \ g:colors_name == 'base16-materia' ||
-    \ g:colors_name == 'base16-monokai'
+    \ g:colors_name == 'base16-oceanicnext'
 
     echo g:colors_name . " has no light colorscheme"
     return
@@ -2058,12 +2086,20 @@ function! Base16MateriaAfter()
   call EnableBold()
 endfunction
 
-function! Base16MonokaiAfter()
-  let g:lightline.colorscheme = 'base16_monokai'
+function! MonokaiAfter()
+  let g:lightline.colorscheme = 'monokai'
 
-  hi SpecialKey cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#75715e
-  hi Whitespace cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#75715e
-  hi Conceal cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#75715e
+  " 使非文本区域和文本区域的颜色方案保持一致.
+  if (g:bgtransparency == 0)
+    hi NonText ctermfg=231 ctermbg=235 cterm=NONE guifg=#f8f8f2 guibg=#272822 gui=NONE
+  endif
+
+  " monokai 主题的 Pmenu 默认是透明背景的, 这里改成不透明.
+  hi Pmenu ctermfg=NONE ctermbg=237 cterm=NONE guifg=NONE guibg=#3c3d37 gui=NONE
+
+  hi SpecialKey ctermfg=NONE ctermbg=237 cterm=NONE guifg=#49483e guibg=NONE gui=NONE
+  hi Whitespace ctermfg=NONE ctermbg=237 cterm=NONE guifg=#49483e guibg=NONE gui=NONE
+  hi Conceal ctermfg=NONE ctermbg=237 cterm=NONE guifg=#49483e guibg=NONE gui=NONE
 
   call EnableItalic()
   call EnableBold()
@@ -2081,6 +2117,17 @@ function! Base16AtelierDuneAfter()
     hi Whitespace cterm=NONE ctermbg=NONE ctermfg=251 guibg=NONE guifg=#CCC8B3
     hi Conceal cterm=NONE ctermbg=NONE ctermfg=251 guibg=NONE guifg=#CCC8B3
   endif
+
+  call EnableItalic()
+  call EnableBold()
+endfunction
+
+function! Base16OceanicnextAfter()
+  let g:lightline.colorscheme = 'base16_oceanicnext'
+
+  hi SpecialKey cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#4F5B66
+  hi Whitespace cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#4F5B66
+  hi Conceal cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#4F5B66
 
   call EnableItalic()
   call EnableBold()
@@ -2121,6 +2168,8 @@ function! SetColorscheme()
       call OneAfter()
     elseif g:colors_name == 'molokai'
       call MolokaiAfter()
+    elseif g:colors_name == 'monokai'
+      call MonokaiAfter()
     elseif g:colors_name == 'gruvbox'
       call GruvboxAfter()
     elseif g:colors_name == 'iceberg'
@@ -2157,12 +2206,12 @@ function! SetColorscheme()
       call Base16CupertinoAfter()
     elseif g:colors_name == 'base16-materia'
       call Base16MateriaAfter()
-    elseif g:colors_name == 'base16-monokai'
-      call Base16MonokaiAfter()
     elseif g:colors_name =~ 'onehalf'
       call OnehalfAfter()
     elseif g:colors_name =~ 'base16-atelier-dune'
       call Base16AtelierDuneAfter()
+    elseif g:colors_name =~ 'base16-oceanicnext'
+      call Base16OceanicnextAfter()
     endif
   endif
 
@@ -2272,10 +2321,6 @@ autocmd BufEnter NERD_tree_* | execute 'normal R'
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
-" 标签页切换快捷键: `shift h` 向左, `shift l` 向右.
-map <S-h> gT
-map <S-l> gt
-
 " 是否显示隐藏文件, 默认值: 0, 表示不显示.
 let NERDTreeShowHidden=1
 
@@ -2383,7 +2428,7 @@ nmap <leader>m :Matrix<CR>
 " }}
 
 
-" 编程语言  Programming Language {{
+" 编程语言  Programming Languages {{
 
 """""""" Go {{
 
@@ -2508,7 +2553,7 @@ let g:go_highlight_diagnostic_warnings = 1
 
 " }}
 
-"""""" Rust {{
+"""""""" Rust {{
 
 """""" mhinz/vim-crates
 if has('nvim')
@@ -2651,10 +2696,10 @@ inoreabbrev <expr> __
 " doc: https://github.com/instant-markdown/vim-instant-markdown
 
 " ,p  打开浏览器预览.
-nmap <leader>p :InstantMarkdownPreview<CR>
+nmap <silent><leader>p :InstantMarkdownPreview<CR>
 
 " ,,p  关闭预览.
-nmap <leader>,p :InstantMarkdownStop<CR>
+nmap <silent><leader><leader>p :InstantMarkdownStop<CR>
 
 " 是否打开 markdown 类型文件时自动打开预览, 默认值: 1
 let g:instant_markdown_autostart = 0
@@ -2662,9 +2707,49 @@ let g:instant_markdown_autostart = 0
 " 指定日志文件.
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 
+""""""" 自定义快速输入 markdown 语法标识符的快捷键
+" from: https://github.com/theniceboy/nvim/blob/master/md-snippets.vim
+" NOTE: 此部分定义的快捷键需要全部在 insert 模式下使用.
+
+" ,b  生成粗体字标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>b **** <++><Esc>F*hi
+" ,i  生成斜体字标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>i ** <++><Esc>F*i
+" ,s  生成删除线标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>s ~~~~ <++><Esc>F~hi
+
+" ,d  生成行内代码标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>d `` <++><Esc>F`i
+" ,c  生成代码段标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>c
+  \ ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
+
+" ,m  生成代办事项标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>m - [ ] <Esc>a
+" ,p  生成图片链接标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>p ![](<++>) <++><Esc>F[a
+" ,a  生成超链接标识符.
+autocmd Filetype markdown inoremap <buffer> <leader>a [](<++>) <++><Esc>F[a
+
+" ,1/2/3/4/5/6  生成一级到六级标题.
+autocmd Filetype markdown inoremap <buffer> <leader>1 #<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap <buffer> <leader>2 ##<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap <buffer> <leader>3 ###<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap <buffer> <leader>4 ####<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap <buffer> <leader>5 #####<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap <buffer> <leader>6 ######<Space><Enter><++><Esc>kA
+
+" ,l  生成水平线.
+autocmd Filetype markdown inoremap <buffer> <leader>l ---<Enter><Enter>
+
+" ,f  以上几乎每一个快捷键都会生成一个占位符(<++>), 按 ,f 光标会跳转到占位符, 并同时删除占位符.
+autocmd Filetype markdown inoremap <buffer> <leader>f <Esc>/<++><CR>:nohlsearch<CR>"_c4l
+" ,w  相比于 ,f 还会增加一个换行动作.
+autocmd Filetype markdown inoremap <buffer> <leader>w <Esc>/<++><CR>:nohlsearch<CR>"_c5l<CR>
+
 " }}
 
-""""""" Vim/Neovim {{
+"""""""" Vim/Neovim {{
 
 " 缩进大小改为 2 个空格, insert 模式下将 tab 扩展为 2 个空格,
 " 此时, 如果想打印 tab 本身的话, 需要按 ctrl v tab
@@ -2672,11 +2757,85 @@ au FileType vim setlocal expandtab ts=2 sw=2 sts=2
 
 " }}
 
-""""""" Yaml {{
+"""""""" Yaml {{
 
 au FileType yaml setlocal expandtab ts=2 sw=2 sts=2
 
 " }}
+
+" }}
+
+
+" 代码调试  Code Debug {{
+
+"""""" puremourning/vimspector
+" doc: https://github.com/puremourning/vimspector
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+" 启动 debug 模式, 或运行到下一个断点.
+nmap <leader>dc <Plug>VimspectorContinue
+
+" 停止运行 debug 模式.
+nmap <leader>ds <Plug>VimspectorStop
+
+" 重新运行 debug 模式.
+nmap <leader>dr <Plug>VimspectorRestart
+
+" 设置行断点.
+nmap <leader>db <Plug>VimspectorToggleBreakpoint
+
+" 运行到下一行代码, 每按一次运行一行代码.
+nmap <leader>dl <Plug>VimspectorStepOver
+
+" step in 进入 breakpoint 所在行调用的函数内部.
+nmap <leader>di <Plug>VimspectorStepInto
+
+" step out 从进入的函数中返回.
+nmap <leader>do <Plug>VimspectorStepOut
+
+" 查看光标所在变量的值, 注意在 debug 模式下必须运行过了这一行才可以.
+nmap <Leader>dv <Plug>VimspectorBalloonEval
+xmap <Leader>dv <Plug>VimspectorBalloonEval
+
+" ,dj  选择模版文件, 在项目的根目录创建必须的 .vimspector.json 文件.
+noremap <silent><leader>dj :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+
+function! s:read_template_into_buffer(template)
+  execute '0r ~/.dotfiles/vim/vimspector/'.a:template
+endfunction
+
+command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
+  \ 'source': 'ls -1 ~/.dotfiles/vim/vimspector',
+  \ 'down': 10,
+  \ 'sink': function('<sid>read_template_into_buffer')
+  \ })
+
+" 断点图标.
+sign define vimspectorBP            text=🌕  texthl=NONE
+" 条件断点图标.
+sign define vimspectorBPCond        text=🔶  texthl=NONE
+" 失效的断点图标.
+sign define vimspectorBPDisabled    text=🌑  texthl=NONE
+" 当前调试到的非断点所在行图标.
+sign define vimspectorPC            text=💎  texthl=NONE       linehl=CursorLine
+" 当前调试到的断点所在行图标.
+sign define vimspectorPCBP          text=●▶  texthl=GitAddSign linehl=CursorLine
+" vimspector.StackTrace 窗口里显示的当前线程图标.
+sign define vimspectorCurrentThread text=🍎  texthl=NONE       linehl=CursorLine
+" vimspector.StackTrace 窗口里显示的当前线程的某段任务代码的所在图标.
+sign define vimspectorCurrentFrame  text=🍒  texthl=NONE       linehl=CursorLine
+
+" 解决其他插件的 sign 覆盖掉 vimspector sign 的问题.
+let g:vimspector_sign_priority = {
+  \ 'vimspectorBP':            199,
+  \ 'vimspectorBPCond':        199,
+  \ 'vimspectorBPDisabled':    199,
+  \ 'vimspectorPC':            200,
+  \ 'vimspectorPCBP':          200,
+  \ 'vimspectorCurrentThread': 200,
+  \ 'vimspectorCurrentFrame':  200,
+  \ }
 
 " }}
 
@@ -2878,11 +3037,12 @@ nnoremap <silent> 0 :call GoToFirstNonBlankOrFirstColumn()<CR>
 vnoremap <silent> 0 :call GoToFirstNonBlankOrFirstColumn()<CR>
 inoremap <silent> <C-a> <C-R>=GoToFirstNonBlankOrFirstColumn()<CR>
 
-" ctrl e/y  normal 模式下, 向下或向上移动屏幕阅读的时候, 从默认的每次移动1行改为3行.
+" ctrl e/y  normal 模式下, 向下或向上移动屏幕阅读的时候,
+" 从默认的每次移动 1 行改为移动 3 行.
 noremap <C-e> 3<C-e>
 noremap <C-y> 3<C-y>
 
-" normal 模式下, 使用Y复制当前行光标之后的内容, 和C和D用法统一起来.
+" normal 模式下, 使用 Y 复制当前行光标之后的内容, 和 C 和 D 用法统一起来.
 nnoremap Y y$
 
 " visual 模式下进行 shift > 和 shift < 缩进操作时,
@@ -3013,6 +3173,16 @@ endif
 nmap <silent> <C-s> :setlocal spell! spelllang=en,cjk<CR>
 imap <silent> <C-s> <C-o>:setlocal spell! spelllang=en,cjk<CR>
 
+" 将在多窗口之间进行上下左右跳转光标的快捷键重新映射:
+"   ctrl h  跳转到左边的窗口;
+"   ctrl l  跳转到右边的窗口;
+"   ctrl k  跳转到上面的窗口;
+"   ctrl j  跳转到下面的窗口.
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
 " 从额外的本地配置文件(如果存在的话)加载配置.
 let vimrc_local='~/.vimrc.local'
 if filereadable(expand(vimrc_local))
@@ -3051,12 +3221,6 @@ endif
 
 " 出错时, 发出视觉提示, 通常是屏幕闪烁.
 "set visualbell
-
-" 多窗口之间上下左右移动的快捷键重新映射, 由于和 vim-move 插件的按键重合, 故暂不使用.
-"noremap <C-h> <C-w>h
-"noremap <C-j> <C-w>j
-"noremap <C-k> <C-w>k
-"noremap <C-l> <C-w>l
 
 " }}
 
@@ -3333,7 +3497,23 @@ endif
 "             ctrl s  normal/insert 模式下, 打开/关闭英文拼写检查.
 "                 ,b  normal 模式下, 在背景是 dark 和 light 之间切换.
 "                 ,v  normal 模式下, 在背景是透明和不透明之间切换.
-
+"       ctrl k/j/h/l  normal 模式下, 上下左右在多窗口之间跳转.
+"
+" ** 快速输入 Markdown 语法标识符的自定义快捷键:
+"                 ,b  生成粗体字标识符.
+"                 ,i  生成斜体字标识符.
+"                 ,s  生成删除线标识符.
+"                 ,d  生成行内代码标识符.
+"                 ,c  生成代码段标识符.
+"                 ,m  生成代办事项标识符.
+"                 ,p  生成图片链接标识符.
+"                 ,a  生成超链接标识符.
+"       ,1/2/3/4/5/6  生成一级到六级标题.
+"                 ,l  生成水平线.
+"                 ,f  以上几乎每一个快捷键都会生成一个占位符(<++>),
+"                     按 ,f 光标会跳转到占位符, 并同时删除占位符.
+"                 ,w  相比于 ,f 此快捷键还会增加一个换行动作.
+"
 " }}
 
 """""""""" 插件提供的能力 {{
@@ -3453,7 +3633,6 @@ endif
 "                     然后使用 :w newfilename 来保存文件, 最后 r 来更新左侧目录树的显示.
 "              gt/gT  向右/向左切换标签页.
 "                3gt  切换到第 3 个标签, 切换到其他标签的方法类似.
-"          shift l/h  向右/向左切换标签页, 是在 .vimrc 中配置的上一条快捷键的映射.
 "          3 shift l  切换到第 3 个标签.
 "                  R  变更目录名称后, 更新目录树中的目录显示.
 "                 CD  如果当前目录树的根目录包含了很多项目, 要将某个项目设置为目录树的根,
@@ -3535,14 +3714,26 @@ endif
 "                 ,m  同上.
 "
 " ** matze/vim-move (https://github.com/matze/vim-move)
-"   [n] ctrl k/j/h/l  normal 模式下将光标所在行向上/向下移动 n 行,
+"   [n] meta k/j/h/l  normal 模式下将光标所在行向上/向下移动 n 行,
 "                     或将光标所在字符向左/向右移动 n 个字符;
 "                     visual 模式下将选择的内容向上/向下移动 n 行,
 "                     或将选择的内容块向左/向右移动 n 个字符.
+"                     NOTE: meta 键表示 macOS 的 option 键, windows 的 alt 键.
 "
 " ** AndrewRadev/splitjoin.vim (https://github.com/AndrewRadev/splitjoin.vim)
 "                 gS  将单行代码拆分成多行.
 "                 gJ  将多行代码合并成单行.
+"
+" ** puremourning/vimspector (https://github.com/puremourning/vimspector)
+"                ,dj  选择模版文件, 在项目的根目录创建必须的 .vimspector.json 文件.
+"                ,dc  启动 debug 模式, 或运行到设置的下一个断点.
+"                ,ds  停止运行 debug 模式.
+"                ,dr  重新运行 debug 模式.
+"                ,db  将当前光标所在行设置为断点.
+"                ,dl  运行到下一行代码, 每按一次快捷键运行一样代码.
+"                ,di  进入 breakpoint 所在行调用的函数内部.
+"                ,do  从进入的函数中返回.
+"                ,dv  查看光标所在变量的值, 注意在 debug 模式下必须运行过了这一行才可以.
 "
 " }}
 

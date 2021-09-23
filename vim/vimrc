@@ -428,7 +428,7 @@ Plug 'tmux-plugins/vim-tmux'
 
 " Vim 从菜鸟到高手之路必备, 禁止连续按 jkhl 等低效操作,
 " 强制你根据不同场景来思考使用更高效的命令的习惯.
-Plug 'takac/vim-hardtime'
+" Plug 'takac/vim-hardtime'
 
 " 异步任务插件.
 Plug 'skywind3000/asynctasks.vim'
@@ -856,19 +856,19 @@ let g:ale_fixers = {
 " doc: https://github.com/takac/vim-hardtime
 
 " 是否使每一个窗口 buffer 都应用此插件功能, 默认值: 0
-let g:hardtime_default_on = 1
+" let g:hardtime_default_on = 1
 
 " 连续按 jklh 等命令时, 禁止连续按的超时时间, 默认值: 1000毫秒.
-let g:hardtime_timeout = 600
+" let g:hardtime_timeout = 600
 
 " 启用 hardtime 模式后, 是否进行模式已启用的提示, 默认值: 0, 表示不提示.
-let g:hardtime_showmsg = 1
+" let g:hardtime_showmsg = 1
 
 " 是否允许连续按2个不同的简单指令, 比如 jh, 默认值: 0, 表示不允许.
-let g:hardtime_allow_different_key = 1
+" let g:hardtime_allow_different_key = 1
 
 " 允许连续按几次简单命令, 默认值: 1
-let g:hardtime_maxcount = 3
+" let g:hardtime_maxcount = 3
 
 """""" preservim/nerdcommenter
 " doc: https://github.com/preservim/nerdcommenter

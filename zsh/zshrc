@@ -242,6 +242,7 @@ alias s=ssh-sessions
 # --- 其他配置 {{
 
 alias vi="nvim"
+alias lg="lazygit"
 
 # 拷贝和移动文件的时候, 如果目标文件存在则进行交互式确认.
 alias cp='cp -i'

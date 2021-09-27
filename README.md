@@ -211,18 +211,24 @@ $ o number
 * number must between 0 and 1
 ```
 
-**Toggle Vim/Neovim background transparency in terminal command line:**
+**Toggle Vim/Neovim background transparent in terminal command line:**
 
 ```text
-vim-bgtransparency
-
-Vim background transparency is currently enabled, to disable:
-
-$ vim-bgtransparency 0
+$ toggle-vim-transparent
 
 or
 
-$ v 0
+$ tv
+```
+
+**Toggle Alacritty background transparent in terminal command line:**
+
+```text
+$ toggle-alacritty-transparent
+
+or
+
+$ to
 ```
 
 **Print 256 colors in terminal command line:**
@@ -234,7 +240,7 @@ or
 
 $ c
 
-$ hexcolors-print
+$ print-256-hex-colors
 
 or
 

@@ -246,6 +246,9 @@ Plug 'rhysd/vim-color-spring-night'
 " primary
 Plug 'google/vim-colorscheme-primary'
 
+" embark
+Plug 'embark-theme/vim', { 'as': 'embark' }
+
 " }}
 
 " 代码补全  Code Completion {{
@@ -273,7 +276,6 @@ Plug 'sheerun/vim-polyglot'
 " 代码静态检查与自动修复插件: ALE(Asynchronous Lint Engine)
 Plug 'dense-analysis/ale'
 
-
 " }}
 
 " 代码调试  Code Debug {{
@@ -281,7 +283,7 @@ Plug 'dense-analysis/ale'
 " 代码 debug 插件
 Plug 'puremourning/vimspector', {'do': './install_gadget.py
   \ --enable-c
-  \ --force-enable-rust
+  \ --enable-rust
   \ --enable-go
   \ --enable-python
   \ --enable-lua
@@ -457,12 +459,6 @@ Plug 'matze/vim-move'
 " 将代码从多行转换为单行或将单行转换为多行.
 Plug 'AndrewRadev/splitjoin.vim'
 
-if has('nvim')
-  " 配合 chrome/firefox 的 firenvim 浏览器插件,
-  " 可在浏览器网站页面的文本输入框内自动使用 nvim 编辑文本.
-  Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-endif
-
 " }}
 
 " 最后 command-line 模式下执行 :PlugInstall 自动安装上面未安装的插件, 其他常用命令:
@@ -505,6 +501,7 @@ call plug#end()
 "   [LS]  Language Server, 补全来自语言服务器.
 "    [S]  Snippets, 补全来自 Snippets.
 "   [US]  UltiSnips, 补全来自 UltiSnips.
+"   [TN]  TabNine, 补全来自 TabNine.
 "  [GOC]  Gocode, 补全来自 gocode.
 "  [NEC]  Neco-vim, 补全来自 Shougo/neco-vim 插件.
 "    [A]  Around, 补全来自当前文件(buffer).
@@ -586,6 +583,20 @@ function! SetupCommandAbbrs(from, to)
 endfunction
 call SetupCommandAbbrs('C', 'CocConfig')
 " ********************************
+
+" *** coc-tabnine ***
+" doc: https://github.com/neoclide/coc-tabnine
+"
+" 1) 打开 TabNine 的配置文件
+"    :CocCommand tabnine.openConfig
+"    NOTE:
+"    如果如上命令无法打开 TabNine 的配置文件, 说明 TabNine 没有正确安装.
+"    需要先删除 ~/.config/coc/extensions/coc-tabnine-data,
+"    然后重新安装 coc-tabnine, :CocInstall coc-tabnine
+" 2) 为了使 coc.nvim 更好的配合 TabNine 工作, 将如下条目加入到 TabNine 的配置文件
+"    "ignore_all_lsp": true
+" 3) 成功安装配置后, 在代码补全的时候, 补全提示列表中会存在标识为 [TN] 的代码源.
+" *******************
 
 " *** coc-translator ***
 " doc: https://github.com/voldikss/coc-translator
@@ -1266,6 +1277,7 @@ endfunction
 "   spring-night: https://github.com/rhysd/vim-color-spring-night
 "   primary: https://github.com/google/vim-colorscheme-primary
 "   base16-*: https://github.com/chriskempson/base16-vim
+"   embark: https://github.com/embark-theme/vim
 "
 " NOTE:
 "   使用颜色主题(colorscheme), 同时请将终端也设置成对应的主题, 这样才能获得更好的视觉效果.
@@ -1286,7 +1298,7 @@ if has('vcon')
   set termguicolors
 endif
 
-" 当 g:bgtransparent 等于 1 时, 是否使 popup window 背景变透明, 1 为开启, 0 为关闭.
+" 当 g:enable_bg_transparent 等于 1 时, 是否使 popup window 背景变透明, 1 为开启, 0 为关闭.
 " NOTE: 变更效果涉及到 coc.nvim 命令补全的弹出窗口, 文档查看窗口等.
 let g:popup_window_transparent=0
 
@@ -1319,7 +1331,7 @@ function! Colorscheme()
     try
       " 设置默认主题.
       colorscheme dracula
-    catch /Cannot find colorscheme 'dracula'/
+    catch /Cannot find color scheme 'dracula'/
     endtry
   endif
 endfunction
@@ -1327,12 +1339,13 @@ endfunction
 " 是否启用 Vim/Neovim 透明背景色的功能, 从单独的配置文件读取相关变量值来控制;
 " 从单独的配置文件读取是为了变更时, 不会干扰到 dotfiles 仓库.
 function! ToggleVimTransparentBgFeature()
-  let transparency_file = expand('~/.vim/transparency.vim')
-  if filereadable(transparency_file)
-    exec 'source' transparency_file
+  let bg_transparent_file = expand('~/.vim/bg_transparent.vim')
+  if filereadable(bg_transparent_file)
+    exec 'source' bg_transparent_file
   else
     " 值为 1 表示启用 Vim/Neovim 背景透明, 0 为禁用.
-    let g:bgtransparency=1
+    " 默认值: 1
+    let g:enable_bg_transparent=1
   endif
 endfunction
 
@@ -1476,16 +1489,16 @@ endfunction
 
 " 设置背景透明的方法, 需要放到 colorscheme 指令之后执行.
 function! BGTransparentAfter()
-  if (g:bgtransparency == 1)
+  if (g:enable_bg_transparent == 1)
     call BackgroundTransparency()
   endif
 endfunction
 
 " 在背景透明和不透明之间切换的方法.
 function! ToggleBGTransparent()
-  if g:bgtransparency == 1
+  if g:enable_bg_transparent == 1
     let &background = &background
-    let g:bgtransparency = 0
+    let g:enable_bg_transparent = 0
 
     if g:colors_name == 'PaperColor'
       call PaperColorBefore()
@@ -1544,10 +1557,12 @@ function! ToggleBGTransparent()
       call Base16AtelierDuneAfter()
     elseif g:colors_name == 'base16-oceanicnext'
       call Base16OceanicnextAfter()
+    elseif g:colors_name == 'embark'
+      call EmbarkAfter()
     endif
   else
     call BackgroundTransparency()
-    let g:bgtransparency = 1
+    let g:enable_bg_transparent = 1
   endif
 
   " 解决在切换背景透明色后, SignColumn/ALESign/GitSign 失去原有颜色方案的问题.
@@ -1572,7 +1587,8 @@ function! ToggleBGColor()
     \ g:colors_name == 'spring-night' ||
     \ g:colors_name == 'base16-flat' ||
     \ g:colors_name == 'base16-materia' ||
-    \ g:colors_name == 'base16-oceanicnext'
+    \ g:colors_name == 'base16-oceanicnext' ||
+    \ g:colors_name == 'embark'
 
     echo g:colors_name . " has no light colorscheme"
     return
@@ -1626,7 +1642,7 @@ function! ToggleBGColor()
   call LightlineReload()
 
   " 解决从透明背景的场景切换背景颜色后, 需要连续按两次 ,v 才能切换成背景透明的问题.
-  let g:bgtransparency = 0
+  let g:enable_bg_transparent = 0
 
   " 解决在变换背景颜色后, SignColumn/ALESign/GitSign 失去原有颜色方案的问题.
   call SignColumnHi()
@@ -2103,7 +2119,7 @@ function! MonokaiAfter()
   let g:lightline.colorscheme = 'monokai'
 
   " 使非文本区域和文本区域的颜色方案保持一致.
-  if (g:bgtransparency == 0)
+  if (g:enable_bg_transparent == 0)
     hi NonText ctermfg=231 ctermbg=235 cterm=NONE guifg=#f8f8f2 guibg=#272822 gui=NONE
   endif
 
@@ -2144,6 +2160,16 @@ function! Base16OceanicnextAfter()
 
   call EnableItalic()
   call EnableBold()
+endfunction
+
+function! EmbarkAfter()
+  let g:lightline.colorscheme = 'embark'
+
+  hi SpecialKey cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#585273
+  hi Whitespace cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#585273
+  hi Conceal cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#585273
+
+  call EnableItalic()
 endfunction
 
 " }}
@@ -2225,6 +2251,8 @@ function! SetColorscheme()
       call Base16AtelierDuneAfter()
     elseif g:colors_name =~ 'base16-oceanicnext'
       call Base16OceanicnextAfter()
+    elseif g:colors_name == 'embark'
+      call EmbarkAfter()
     endif
   endif
 
@@ -2240,8 +2268,8 @@ endfunction
 
 call SetColorscheme()
 
-" *** Neovim 已打开的实例自动更新 colorscheme ***
-" 通过命令行或快捷键变更 colorscheme 时, 使打开的 neovim 实例自动更新 colorscheme.
+" *** Vim/Neovim 已打开的实例自动更新 colorscheme ***
+" 通过命令行或快捷键变更 colorscheme 时, 使打开的 vim/neovim 实例自动更新 colorscheme.
 
 let g:vim_colorscheme_toggle_tmpfile = '~/.vim/signal.tmp'
 
@@ -2263,7 +2291,7 @@ if !exists("g:CheckUpdateStarted")
   call timer_start(1, 'CheckUpdate')
 endif
 
-" ***********************************************
+" ***************************************************
 
 " ,b  normal 模式下, 在背景是 dark 和 light 之间切换.
 nnoremap <silent> <leader>b :call ToggleBGColor()<CR>
@@ -2300,9 +2328,8 @@ let NERDTreeMinimalUI=1
 let NERDTreeMinimalMenu=0
 
 " 运行 Vim 时, 后面不接任何文件的情况, 自动打开目录树窗口.
-" NOTE: 如果使用了 firenvim 插件, 不建议启用此条配置.
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
 " 运行 Vim 的时候自动打开目录树. 如果 vim 后面接了文件, 则将光标自动移动到文件窗口.
 " NOTE: 如果使用 tmux, 不建议启用此条配置.

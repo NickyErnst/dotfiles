@@ -36,6 +36,15 @@
 
 # --- 基础配置 {{
 
+# 解决 source ~/.zshrc 和 ~/.tmux.conf 中 set-environment -g PATH 导致的 PATH 变量值重复的问题.
+# $PATH 值的来源:
+#   1) /etc/paths
+#   2) /etc/paths.d/*
+#   3) ~/.zshrc
+#   4) ~/.zshenv
+#   5) ~/.tmux.conf 中的 set-environment -g PATH ""
+typeset -U PATH
+
 # oh-my-zsh 安装路径.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -53,15 +62,27 @@ ZSH_THEME="ys"
 # vi-mode:  ~/.oh-my-zsh/plugins/vi-mode/README.md
 # tmux:  ~/.oh-my-zsh/plugins/tmux/README.md
 # git:  ~/.oh-my-zsh/plugins/git/README.md
+# gitignore: ~/.oh-my-zsh/plugins/gitignore/README.md
 # history: ~/.oh-my-zsh/plugins/history/README.md
 # brew:  ~/.oh-my-zsh/plugins/brew/README.md
 # extract:  ~/.oh-my-zsh/plugins/extract/README.md
 # web-search: ~/.oh-my-zsh/plugins/web-search/README.md
 # emoji: ~/.oh-my-zsh/plugins/emoji/README.md
+# colorize: ~/.oh-my-zsh/plugins/colorize/README.md
+# colored-man-pages: ~/.oh-my-zsh/plugins/colored-man-pages/README.md
+# zsh_reload: ~/.oh-my-zsh/plugins/zsh_reload/README.md
+# sudo: ~/.oh-my-zsh/plugins/sudo/README.md
+# timer: ~/.oh-my-zsh/plugins/timer/README.md
+# themes: ~/.oh-my-zsh/plugins/themes/README.md
+# urltools: ~/.oh-my-zsh/plugins/urltools/README.md
+# copyfile: ~/.oh-my-zsh/plugins/copyfile/README.md
+# copydir: ~/.oh-my-zsh/plugins/copydir/README.md
+# aliases: ~/.oh-my-zsh/plugins/aliases/README.md
 plugins=(
     vi-mode
     tmux
     git
+    gitignore
     z
     history
     brew
@@ -70,7 +91,23 @@ plugins=(
     emoji
     zsh-autosuggestions
     zsh-syntax-highlighting
+    colorize
+    colored-man-pages
+    zsh_reload
+    sudo
+    timer
+    themes
+    urltools
+    copyfile
+    copydir
+    aliases
 )
+
+# timer
+# Default: 1
+TIMER_PRECISION=2
+# Default: '/%d'
+TIMER_FORMAT='[%d]'
 
 # 解决粘贴较长的内容到终端命令行时速度太慢的问题.
 # NOTE:
@@ -209,47 +246,59 @@ export PATH="/usr/local/opt/bash/bin:$PATH"
 # }}
 
 
-# --- 自定义命令配置 {{
+# --- alias 配置 {{
 
-# *** Vim/Neovim & Alacritty 主题相关命令配置
-alias colorscheme="~/.dotfiles/scripts/colorscheme.zsh"
-alias font="~/.dotfiles/scripts/font.zsh"
-alias opacity="~/.dotfiles/scripts/opacity.zsh"
-alias font-size="~/.dotfiles/scripts/font_size.zsh"
-alias vim-bgtransparency="~/.dotfiles/scripts/vim_bgtransparency.zsh"
-alias colors-print="~/.dotfiles/scripts/colors_print.sh"
-alias hexcolors-print="~/.dotfiles/scripts/print_256_hex_colors.py"
+# *** dotfiles 项目可执行文件
 
+# 将 bin 目录加入到 PATH.
+export PATH="$HOME/.dotfiles/bin:$PATH"
+
+# Vim/Neovim & Alacritty 主题相关命令
 alias cs=colorscheme
+alias rc=random-colorscheme
 alias f=font
+alias rf=random-font
 alias o=opacity
+alias ino=increase-opacity
+alias deo=decrease-opacity
 alias fs=font-size
-alias v=vim-bgtransparency
+alias tv=toggle-vim-transparent
+alias to=toggle-alacritty-transparent
 alias c=colors-print
-alias hex=hexcolors-print
+alias hex=print-256-hex-colors
 
-# *** 调节系统音量
-alias volume="~/.dotfiles/scripts/audio_volume.zsh"
-alias vol=volume
+## 调节系统音量
+alias vol=audio-volume
 
-# *** 便捷批量 ssh 连接或恢复连接远程服务器
-alias ssh-sessions="~/.dotfiles/scripts/ssh_sessions.sh"
+## 便捷批量 ssh 连接或恢复连接远程服务器
 alias s=ssh-sessions
 
-# }}
+## *** 快速打开 dotfiles 的几种主要配置文件
+alias zshrc='nvim ~/.dotfiles/zsh/zshrc'
+alias vimrc='nvim ~/.dotfiles/vim/vimrc'
+alias tmuxconf='nvim ~/.dotfiles/tmux/tmux.conf'
+alias ala='nvim ~/.dotfiles/alacritty/alacritty.yml'
 
+# *** 快速切换到常用的目录
+alias d="cd ~/Documents"
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+alias gitlab="cd ~/gitlab"
 
-# --- 其他配置 {{
-
+# *** 其他
 alias vi="nvim"
 alias lg="lazygit"
 
-# 拷贝和移动文件的时候, 如果目标文件存在则进行交互式确认.
 alias cp='cp -i'
 alias mv='mv -i'
 
 # 列出正在监听的tcp连接.
 alias lsof_tcp="lsof -aP -i TCP -s TCP:LISTEN"
+
+# }}
+
+
+# --- 其他配置 {{
 
 # 用于 git commit 的签名.
 export GPG_TTY=$(tty)
@@ -288,6 +337,7 @@ alias ff="vim \$(fzf)"
 #               bing key  打开浏览器使用 bing 搜索 key.
 #              baidu key  打开浏览器使用 baidu 搜索 key.
 #      stackoverflow key  打开浏览器使用 stackoverflow 搜索 key.
+#             github key  打开浏览器使用 github 搜索 key.
 #
 # *** git 插件 (~/.oh-my-zsh/plugins/git/README.md)
 #                    gst  git status
@@ -299,6 +349,39 @@ alias ff="vim \$(fzf)"
 #                    glo  git log --oneline --decorate
 #                   glog  git log --oneline --decorate --graph
 #                     gl  git pull
+#
+# *** gitignore 插件 (~/.oh-my-zsh/plugins/gitignore/README.md)
+#                gi list  列出所有支持的编程语言.
+#                  gi go  生成 Go 语言的 .gitignore 文件内容.
+#
+# *** colorize 插件 (~/.oh-my-zsh/plugins/colorize/README.md)
+#                   ccat  彩色版的 cat.
+#                  cless  彩色版的 less.
+#
+# *** zsh_reload 插件 (~/.oh-my-zsh/plugins/zsh_reload/README.md)
+#                    src  重新加载 ~/.zshrc.
+#
+# *** sudo 插件 (~/.oh-my-zsh/plugins/sudo/README.md)
+#                esc esc  连续按两次 esc 将在命令行首自动增加 sudo.
+#
+# *** themes 插件 (~/.oh-my-zsh/plugins/themes/README.md)
+#                lstheme  列出所有已安装的 zsh 主题名称.
+#                  theme  随机更换一个主题.
+#             theme name  指定切换到某个主题.
+#
+# *** urltools 插件 (~/.oh-my-zsh/plugins/urltools/README.md)
+#        urlencode 'url'  url 编码.
+#        urldecode 'url'  url 解码.
+#
+# *** copyfile 插件 (~/.oh-my-zsh/plugins/copyfile/README.md)
+#         copyfile 1.txt  将 1.txt 文件内容拷贝到系统剪贴板.
+#
+# *** copydir 插件 (~/.oh-my-zsh/plugins/copydir/README.md)
+#                copydir  将当前的目录 fullpath 拷贝到系统剪贴板.
+#
+# *** aliases 插件 (~/.oh-my-zsh/plugins/aliases/README.md)
+#                    acs  列出所有 alias 设置.
+#                acs key  列出包含 key 的 alias 设置.
 #
 # *** fzf 工具 (https://github.com/junegunn/fzf)
 #                     ff  通过 fzf 搜索文件并用 vim 打开.
@@ -313,13 +396,17 @@ alias ff="vim \$(fzf)"
 #
 # *** 自定义命令
 #         colorscheme/cs  切换 vim 和 alacritty 的颜色方案.
+#                     rc  随机切换 vim 和 alacritty 的颜色方案.
 #                 font/f  切换 alacritty 终端的字体.
+#                     rf  随机切换 alacritty 终端的字体.
 #              opacity/o  调整 alacritty 终端的透明度.
+#                ino/deo  微调 alacritty 终端的透明度.
 #           font-size/fs  设置 alacritty 终端的字体大小.
-#   vim-bgtransparency/v  打开或关闭 Vim 背景透明色.
+#                     tv  打开或关闭 Vim 背景透明色.
+#                     to  打开或关闭 Alacritty 背景透明色.
 #         colors-print/c  打印 256 色的前景色模式和背景色模式.
-#    hexcolors-print/hex  打印 256 色的 16 进制表示方式.
-#             volume/vol  调整系统音量大小.
+#                    hex  打印 256 色的 16 进制表示方式.
+#                    vol  调整系统音量大小.
 #         ssh-sessions/s  便捷的批量 ssh 连接远程服务器.
 #               lsof_tcp  查看当前监听的端口信息.
 

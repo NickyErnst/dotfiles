@@ -249,6 +249,9 @@ Plug 'google/vim-colorscheme-primary'
 " embark
 Plug 'embark-theme/vim', { 'as': 'embark' }
 
+" no color: off
+Plug 'pbrisbin/vim-colors-off'
+
 " }}
 
 " 代码补全  Code Completion {{
@@ -330,9 +333,6 @@ Plug 'junegunn/fzf.vim'
 " 集成 ranger 文件管理器.
 Plug 'francoiscabrol/ranger.vim'
 
-" 在上一个插件的基础上, 根据文件类型的不同, 改变图标的颜色.
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
 " 悬浮终端插件.
 Plug 'voldikss/vim-floaterm'
 
@@ -342,12 +342,25 @@ Plug 'Yggdroot/indentLine'
 " Vim 屏保 Matrix.
 Plug 'uguu-org/vim-matrix-screensaver'
 
+" 在文件内直接显示颜色代码所表示的颜色.
+" NOTE: 该插件需要操作系统有 Go 环境.
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+" 对 Vim 主题配色方案进行调整时, 可使用此工具获取光标下标识符当前配色方案的详细信息.
+Plug 'vim-scripts/SyntaxAttr.vim'
+
+" 日历插件.
+Plug 'itchyny/calendar.vim'
+
 " 为目录树、LeaderF、ranger 等插件显示文件类型.
 " NOTE:
 " 1) 需安装 nerd-fonts, 并设置终端模拟器的字体为相关字体.
 "    # doc: https://github.com/ryanoasis/nerd-fonts#font-installation
 " 2) 此插件要安装在目录树、LeaderF 等插件的后面.
 Plug 'ryanoasis/vim-devicons'
+
+" 在 vim-devicons 插件的基础上, 根据文件类型的不同, 改变图标的颜色.
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " }}
 
@@ -1278,6 +1291,7 @@ endfunction
 "   primary: https://github.com/google/vim-colorscheme-primary
 "   base16-*: https://github.com/chriskempson/base16-vim
 "   embark: https://github.com/embark-theme/vim
+"   off: https://github.com/pbrisbin/vim-colors-off
 "
 " NOTE:
 "   使用颜色主题(colorscheme), 同时请将终端也设置成对应的主题, 这样才能获得更好的视觉效果.
@@ -1452,6 +1466,9 @@ function! LightlineReload()
   elseif g:colors_name == 'pencil'
     execute 'source ' . g:plug_home .
       \ '/lightline.vim/autoload/lightline/colorscheme/pencil.vim'
+  elseif g:colors_name == 'off'
+    execute 'source ' . g:plug_home .
+      \ '/lightline.vim/autoload/lightline/colorscheme/off.vim'
   endif
 
   call lightline#init()
@@ -1559,6 +1576,8 @@ function! ToggleBGTransparent()
       call Base16OceanicnextAfter()
     elseif g:colors_name == 'embark'
       call EmbarkAfter()
+    elseif g:colors_name == 'off'
+      call OffAfter()
     endif
   else
     call BackgroundTransparency()
@@ -1636,6 +1655,8 @@ function! ToggleBGColor()
     call IcebergAfter()
   elseif g:colors_name == 'primary'
     call GooglePrimaryAfter()
+  elseif g:colors_name == 'off'
+    call OffAfter()
   endif
 
   " 重载 lightline 状态栏, 使其颜色随着背景色改变.
@@ -2172,6 +2193,25 @@ function! EmbarkAfter()
   call EnableItalic()
 endfunction
 
+function! OffAfter()
+  let g:lightline.colorscheme = 'off'
+
+  if &background == 'dark'
+    hi SpecialKey cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#545454
+    hi Whitespace cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#545454
+    hi Conceal cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#545454
+  else
+    hi SpecialKey cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#c6c6c6
+    hi Whitespace cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#c6c6c6
+    hi Conceal cterm=NONE ctermbg=NONE ctermfg=238 guibg=NONE guifg=#c6c6c6
+  endif
+
+  call EnableItalic()
+  hi Special cterm=italic gui=italic guifg=NONE ctermfg=NONE
+
+  call EnableBold()
+endfunction
+
 " }}
 
 " *********************************
@@ -2253,6 +2293,8 @@ function! SetColorscheme()
       call Base16OceanicnextAfter()
     elseif g:colors_name == 'embark'
       call EmbarkAfter()
+    elseif g:colors_name == 'off'
+      call OffAfter()
     endif
   endif
 
